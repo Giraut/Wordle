@@ -78,26 +78,30 @@ def colored_guess(word, guess, spent_letters):
   """Return a colored guessword
   """
 
-  s = ""
+  s = [" " + c + " " for c in guess]
   w = list(word)
+  g = list(guess)
 
-  for i, c in enumerate(guess):
+  for i, c in enumerate(g):
+
+    if w[i] == c:
+      s[i] = color_letter_found + s[i]
+      w[i] = "0"
+      g[i] = "1"
+
+  for i, c in enumerate(g):
 
     if c == "_":
-      s += color_letter_empty + " " + c + " "
-
-    elif w[i] == c:
-      s += color_letter_found + " " + c + " "
-      w[i] = None
+      s[i] = color_letter_empty + s[i]
 
     elif c in w:
-      s += color_letter_misplaced + " " + c + " "
-      w[i] = None
+      s[i] = color_letter_misplaced + s[i]
+      w[w.index(c)] = "0"
 
-    else:
-      s += color_letter_spent + " " + c + " "
+    elif c != "1":
+      s[i] = color_letter_spent + s[i]
 
-  return s + attribute_reset
+  return "".join(s) + attribute_reset
 
 
 
