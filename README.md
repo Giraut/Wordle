@@ -11,6 +11,6 @@ pip3 install readchar
 ```
 
 The dictionary should be a flat files with one English word per line. Typically
-dictionary files are installed in /usr/share/dict by most Linux distributions.
+dictionary files are installed in ```/usr/share/dict by most Linux distributions```.
 
 The larger the dictionary, the more varied the words of course.
