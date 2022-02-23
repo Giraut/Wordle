@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 """Wordle-like game for the Unix console
 
-This is what the New York Times bought for over one million dollars :)
+This is what the New York Times paid $1.7M for :)
 
 If you're tired of being tracked online when you play this wonderful little
-game, use this small Python script instead.
+game, use this Python script instead.
 
-The dictionary should be a flat files with one English word per line. Typically
-dictionary files are installed in /usr/share/dict by most Linux distributions.
+The dictionary files should be flat files with one word per line.
+They are commonly installed in /usr/share/*spell/ or /usr/share/dict/.
+If you don't see files there, try installing hunspell-en-us or wamerican.
+The program tries to load as many of the files listed in the parameters.
 
-The larger the dictionary, the more varied the words of course.
+The larger the final combined dictionary, the more varied the words of course.
 """
 
 # Modules
@@ -20,7 +22,10 @@ import termios
 
 
 # Parameters
-dictionary = "/usr/share/dict/american-english"
+dictionaries = [
+  "/usr/share/hunspell/en_US.dic",
+  "/usr/share/myspell/en_US.dic",
+  "/usr/share/dict/american-english"]
 letters = 5
 attempts = 6
 
@@ -143,17 +148,24 @@ def readchar():
 # Main routine
 if __name__ == "__main__":
 
-  # Load words of the correct length without odd characters from the dictionary
-  with open(dictionary, "r") as f:
-    dictio = [w.upper() for w in f.read().splitlines() \
-		if w.isalpha() and len(w) == letters]
+  # Load words of the right length without odd characters from the dictionaries
+  dic = set()
+  for d in dictionaries:
+    try:
+      with open(d, "r") as f:
+        dic = dic.union(set([w.upper() for w in \
+			[w.split("/")[0] for w in f.read().splitlines()] \
+			if w.isalpha() and len(w) == letters]))
+    except:
+      pass
 
   # Run the game continuously
   while True:
 
     # Pick a new word to find
-    word = dictio[random.randrange(len(dictio))]
+    word = random.sample(list(dic), 1)[0]
 
+    # Reset guesses and lists of spent and found letters
     guesses = ["_" * letters] * attempts
     spent_letters = ""
     found_letters = ""
@@ -196,7 +208,7 @@ if __name__ == "__main__":
 
         # Read a single character
         c = readchar().upper()
- 
+
         # Erase a character from the guessword
         if c == BACKSPACE:
           if guess:
@@ -205,7 +217,7 @@ if __name__ == "__main__":
 
         # Validate the guess if it's in the dictionary
         elif c == RETURN:
-          if guess in dictio:
+          if guess in dic:
             break
 
         # Add a letter to the guessword if there's still room
