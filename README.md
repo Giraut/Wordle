@@ -1,4 +1,4 @@
-# Wordle-like game for the Unix console
+# Wordle game for the Unix console
 
 This is what the New York Times paid $1.7M for :)
 
