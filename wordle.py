@@ -6,10 +6,6 @@ This is what the New York Times bought for over one million dollars :)
 If you're tired of being tracked online when you play this wonderful little
 game, use this small Python script instead.
 
-You need to install the readchar module to make it work:
-
-pip3 install readchar
-
 The dictionary should be a flat files with one English word per line. Typically
 dictionary files are installed in /usr/share/dict by most Linux distributions.
 
@@ -18,10 +14,9 @@ The larger the dictionary, the more varied the words of course.
 
 # Modules
 import sys
-import string
-from random import randrange
-from readchar import readchar
-
+import tty
+import random
+import termios
 
 
 # Parameters
@@ -68,7 +63,6 @@ keyboard = [
 
 # Special keys
 BACKSPACE = "\x7f"
-ESC = "\x1b"
 RETURN = "\r"
 
 
@@ -132,6 +126,20 @@ def colored_kbdline(kbdline, spent_letters, found_letters):
 
 
 
+def readchar():
+  """Read one character raw
+  """
+  ss = termios.tcgetattr(sys.stdin.fileno())
+
+  try:
+    tty.setraw(sys.stdin.fileno())
+    return sys.stdin.read(1)
+
+  finally:
+    termios.tcsetattr(sys.stdin.fileno(), termios.TCSADRAIN, ss)
+
+
+
 # Main routine
 if __name__ == "__main__":
 
@@ -144,7 +152,7 @@ if __name__ == "__main__":
   while True:
 
     # Pick a new word to find
-    word = dictio[randrange(len(dictio))]
+    word = dictio[random.randrange(len(dictio))]
 
     guesses = ["_" * letters] * attempts
     spent_letters = ""
@@ -200,15 +208,16 @@ if __name__ == "__main__":
           if guess in dictio:
             break
 
-        # Quit
-        elif c == ESC:
+        # Add a letter to the guessword if there's still room
+        elif c.isalpha():
+          if len(guess) < letters:
+            guess += c
+            print(c, end = "")
+
+        # Any other key: quit
+        else:
           print("\n\nBye...\n")
           quit()
-
-        # Add a letter to the guessword
-        elif len(guess) < letters and c.isalpha():
-          guess += c
-          print(c, end = "")
 
       # Add the new guessword to the list of guesswords
       guesses[t] = guess
