@@ -7,3 +7,7 @@ The dictionary files should be flat files with one word per line. They are commo
 The program tries to load as many of the files listed in the parameters.
 
 The larger the final combined dictionary, the more varied the words of course.
+
+
+
+[Debian](https://github.com/Giraut/ppa) and [RPM](https://github.com/Giraut/rpm) Linux packages are also available.
