@@ -1,10 +1,7 @@
 #!/usr/bin/python3
 """Wordle game for the Unix console
 
-This is what the New York Times paid $1.7M for :)
-
-If you're tired of being tracked online when you play this wonderful little
-game, use this Python script instead.
+This is a clone of the popular Wordle game playable on a regular Unix terminal
 
 The dictionary files should be flat files with one word per line.
 They are commonly installed in /usr/share/*spell/ or /usr/share/dict/.
@@ -77,7 +74,7 @@ def colored_guess(word, guess, spent_letters):
   """Return a colored guessword
   """
 
-  s = [" " + c + " " for c in guess]
+  s = [" " + (" " if c == "_" else c) + " " for c in guess]
   w = list(word)
   g = list(guess)
 
@@ -113,7 +110,7 @@ def colored_kbdline(kbdline, spent_letters, found_letters):
   for i, c in enumerate(kbdline):
 
     if c == "_":
-      s += color_letter_empty + c
+      s += color_letter_empty + " "
 
     elif c not in spent_letters :
       s += color_letter_unused + c

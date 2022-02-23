@@ -1,0 +1,7 @@
+Package: wordle
+Version:
+Maintainer: Rosco <roskis@runbox.com>
+Description: Wordle game for the Unix console
+Homepage: https://github.com/Giraut/Wordle
+Architecture: all
+Depends: python3 (>=3.7.0b1), hunspell-en-us
