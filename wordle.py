@@ -174,6 +174,7 @@ if __name__ == "__main__":
 
     print()
 
+    # Spacing to center the guesswords and the keyboard
     k_offset =  int((letters * 3 - len(keyboard[0])) / 2)
 
     for t in range(attempts + 1):
@@ -190,7 +191,7 @@ if __name__ == "__main__":
 
       print()
 
-      # If the user has ran out of attempts or has guessed right, stop trying
+      # If the user has run out of attempts or has guessed right, stop trying
       if t == attempts or guess == word:
         print("\n")
         break
