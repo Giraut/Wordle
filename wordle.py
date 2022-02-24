@@ -18,6 +18,12 @@ default_nb_letters = 5
 default_nb_attempts = 6
 default_difficulty = 5
 
+entry_checking_dictionaries = [	# Unsorted extended dictionaries merged with the
+				# main dictionary to check user guesses against
+  "/usr/share/hunspell/en_US.dic",
+  "/usr/share/myspell/en_US.dic",
+  "/usr/share/dict/american-english"]
+
 
 
 ### Defines:
@@ -182,8 +188,21 @@ def game():
     print("Invalid difficulty level {}".format(args.difficulty))
     return -1
 
-  # Keep words of the right length from the dictionary
+  # Keep words of the right length from the main dictionary
   dic = [w.upper() for w in dictionary if len(w) == args.letters]
+
+  # Load words of the right length without odd characters from extended
+  # unsorted spellchecking dictionaries and combine them with words from the
+  # main dictionary to form the entry checking dictionary
+  ecdic = set(dic)
+  for d in entry_checking_dictionaries:
+    try:
+      with open(d, "r") as f:
+        ecdic = ecdic.union(set([w.upper() for w in \
+			[w.split("/")[0] for w in f.read().splitlines()] \
+			if w.isalpha() and len(w) == args.letters]))
+    except:
+      pass
 
   # Calculate the spacing to center the guesswords and the keyboard
   sp =  int((args.letters * 3 - len(keyboard[0])) / 2)
@@ -196,7 +215,7 @@ def game():
 
   print("\n{} possible words!\n".format(len(dic)))
 
-  # The dictionary should have at least one entry
+  # The main dictionary should have at least one entry
   if len(dic) < 1:
     return -1
 
@@ -239,7 +258,7 @@ def game():
         break
 
       # Ask the user their next guess. Only stop the user input when the user
-      # hits ESC or enters a guessword that is in the dictionary
+      # hits ESC or enters a guessword that is in the entry checking dictionary
       guess = ""
       escapes = 0
 
@@ -262,9 +281,9 @@ def game():
             guess = guess[:-1]
             print("\b_", end = "\b")
 
-        # Validate the guess if it's in the dictionary
+        # Validate the guess if it's in the entry checking dictionary
         elif c == RETURN:
-          if guess in dic:
+          if guess in ecdic:
             break
 
         # Add a letter to the guessword if there's still room
