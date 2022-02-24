@@ -63,9 +63,17 @@ keyboard = [
   "__A S D F G H J K L__",
   "_< Z X C V B N M [=]_"]
 
+# Predefined messages
+guess_prompt = "Enter guess: "
+won = "You win!"
+lost = "You lose! The word was:"
+again_prompt = "Try again [Y/N]? "
+bye = "Bye..."
+
 # Special keys
-BACKSPACE = "\x7f"
 RETURN = "\r"
+ESCAPE = "\x1b"
+BACKSPACE = "\x7f"
 
 
 
@@ -156,6 +164,18 @@ if __name__ == "__main__":
     except:
       pass
 
+  # Calculate the spacing to center the guesswords and the keyboard
+  k_offset =  int((letters * 3 - len(keyboard[0])) / 2)
+
+  # Calculate the maximum line length
+  max_ll = max(letters * 3 + max(0, -k_offset),
+		len(keyboard[0]) + max(0, k_offset),
+		len(guess_prompt) + letters, len(won), len(lost),
+		len(again_prompt))
+
+  print("\n{} possible words!\n".format(len(dic)))
+  print("(ESC twice to quit)\n")
+
   # Run the game continuously
   while True:
 
@@ -169,10 +189,9 @@ if __name__ == "__main__":
 
     guess = ""
 
-    print()
-
-    # Spacing to center the guesswords and the keyboard
-    k_offset =  int((letters * 3 - len(keyboard[0])) / 2)
+    # Wipe the game area clean and move the cursor back to the top left
+    print((" " * max_ll + "\n") * (attempts + len(keyboard) + 8), end = "")
+    print(x_lines_up.format(attempts + len(keyboard) + 8), end = "\r")
 
     for t in range(attempts + 1):
 
@@ -196,8 +215,9 @@ if __name__ == "__main__":
       # Ask the user their next guess. Only stop the user input when the user
       # hits ESC or enters a guessword that is in the dictionary
       guess = ""
+      escapes = 0
 
-      print("Enter guess:", "_" * letters + "\b" * letters, end = "")
+      print(guess_prompt, "_" * letters + "\b" * letters, end = "")
 
       while True:
 
@@ -206,6 +226,9 @@ if __name__ == "__main__":
 
         # Read a single character
         c = readchar().upper()
+
+        # Count successive ESC characters
+        escapes = escapes + 1 if c == ESCAPE else 0
 
         # Erase a character from the guessword
         if c == BACKSPACE:
@@ -224,9 +247,9 @@ if __name__ == "__main__":
             guess += c
             print(c, end = "")
 
-        # Any other key: quit
-        else:
-          print("\n\nBye...\n")
+        # Quit if ESC twice
+        elif escapes == 2:
+          print("\n\n" + bye + "\n")
           quit()
 
       # Add the new guessword to the list of guesswords
@@ -241,17 +264,20 @@ if __name__ == "__main__":
         if word[i] == c:
           found_letters += c
 
-      # Move the cursor back to the top of the stack of guesses, 1st column
-      print(x_lines_up.format(attempts + len(keyboard) + 2) + "\r", end = "")
+      # Move the cursor back to the top left
+      print(x_lines_up.format(attempts + len(keyboard) + 2), end = "\r")
 
     # Display whether the user won or lost, and what the word was if they lost
-    print("You win!" if guess == word else "You lose! The word was:\n" + \
+    print((won + "\n") if guess == word else lost + "\n" + \
 		colored_guess(word, word, "") + attribute_reset, end = "\n\n")
 
     # Ask the user if they would like to play again
-    print("Try again [Y/N]?")
+    print(again_prompt)
     c = readchar()
 
     if c not in "yY" + RETURN:
-      print("\nBye...\n")
+      print("\n" + bye + "\n")
       break
+
+    # Move the cursor back to the top left
+    print(x_lines_up.format(attempts + len(keyboard) + 8), end = "\r")
