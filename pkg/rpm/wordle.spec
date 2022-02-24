@@ -4,7 +4,7 @@ Release:	0
 Summary:	wordle - Wordle game for the Unix console
 License:	GPL-3.0
 
-Requires:	python3 >= 3.7.0b1, hunspell-en-US
+Requires:	python3 >= 3.7.0b1
 
 
 %description
