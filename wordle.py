@@ -226,7 +226,7 @@ def game(letters, attempt, difficulty):
       guess = ""
       escapes = 0
 
-      print(lp.guess, "_" * letters + "\b" * letters, end = "")
+      print(lp.guess + "_" * letters + "\b" * letters, end = "")
 
       while True:
 
