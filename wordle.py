@@ -277,7 +277,7 @@ def game(letters, attempt, difficulty):
       print(x_lines_up.format(attempts + len(lp.keyboard) + 2), end = "\r")
 
     # Display whether the user won or lost, and what the word was if they lost
-    print((re.won + "\n") if guess == word else lp.lost + "\n" + \
+    print((lp.won + "\n") if guess == word else lp.lost + "\n" + \
 		colored_guess(word, word, "") + attribute_reset, end = "\n\n")
 
     # Ask the user if they would like to play again
