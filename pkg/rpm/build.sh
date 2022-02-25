@@ -26,12 +26,17 @@ cp -a ${PKGSPEC} ${PKGBUILD}/SPECS
 # Create empty directory structure
 mkdir -p ${BUILDROOT}/usr/local/bin
 mkdir -p ${BUILDROOT}/usr/share/doc/wordle
+mkdir -p ${BUILDROOT}//usr/local/games/wordle
 
 # Populate the package build directory with the source files
 install -m 644 ${SRC}/README ${BUILDROOT}/usr/share/doc/wordle
 install -m 644 ${SRC}/LICENSE ${BUILDROOT}/usr/share/doc/wordle
 
 install -m 755 ${SRC}/wordle.py ${BUILDROOT}/usr/local/bin/wordle
+(cd ${BUILDROOT}/usr/local/bin && ln -s wordle sanuli)
+
+install -m 644 ${SRC}/en_GB.langpack ${BUILDROOT}/usr/local/games/wordle
+install -m 644 ${SRC}/fi_FI.langpack ${BUILDROOT}/usr/local/games/wordle
 
 # Fixup permissions
 find ${PKGBUILD} -type d -exec chmod 755 {} \;
