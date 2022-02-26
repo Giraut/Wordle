@@ -1,4 +1,4 @@
-# wordle - v1.3.0
+# wordle v1.4.0
 ## Wordle game for the Unix console
 
 This is a clone of the popular Wordle game playable on a regular Unix terminal
@@ -25,7 +25,17 @@ Different lists and game parameters are used in different language packs:
 
     The list of extra words is based on the contemporary Finnish words list from the Finnish Language Research center, version 1, published 12/15/06 under the terms of the GNU LGPL license.
 
-Use the ```-l``` or ```-L``` switches to change language. Renaming the program ```sanuli``` or ```sanuli.py``` will also automatically start the game in Finnish.
+  * fr_FR (France French):
+
+    The frequency list is based on the ```Darkdadaah/Listes/Mots``` ```dump/frwiki/2016-02-03``` frequency list compiled by Wiktionnaire user Darkdabaah.
+
+    The list of extra words is based on the ```wfrench``` Debian package compiled from various sources.
+
+
+
+Use the ```-l``` or ```-L``` switches to change language.
+
+Additionally, renaming or symlinking the program with the name ```sanuli``` or ```sanuli.py``` will automatically start the game in Finnish, and ```lemot``` or ```lemot.py``` will start the game in French.
 
 Use ```-n``` to change the number of letters, ```-a``` to change the number of attempts and ```-d``` to change the level of difficulty.
 

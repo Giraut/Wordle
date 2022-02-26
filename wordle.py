@@ -20,16 +20,18 @@ import importlib.machinery
 
 ### Parameters
 # Paths to language packs
-language_packs_path = ("/usr/local/games/wordle", ".")
+language_packs_path = ("/usr/share/games/wordle", ".")
 
 # Default language packs attached to plain language names
 languages = {
   "english":	"en_GB",
-  "suomi":	"fi_FI"}
+  "suomi":	"fi_FI",
+  "français":	"fr_FR"}
 
 # What language pack we should load depending on the name of the program
 alternative_program_name_language_packs = {
   r"sanuli(\.py)?":	"fi_FI",
+  r"lemot(\.py)?":	"fr_FR",
   ".+":			"en_GB"}
 
 

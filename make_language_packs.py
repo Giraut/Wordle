@@ -72,7 +72,7 @@ languages = {
 
   "fi_FI": {
     "description": [
-      "Suomen kielipaketti Worldelle"
+      "Suomen kielipaketti Worldlelle"
     ],
     "charset": "[A-ZÖÄÅ]",
     "keyboard": [
@@ -119,7 +119,59 @@ languages = {
       "normalize": lambda lst, cs:
          [w.upper() for w in lst if re.match("^{}+$".format(cs), w.upper())]
     }
-  }
+  },
+
+  "fr_FR": {
+    "description": [
+      "Paquet linguistique pour Wordle"
+    ],
+    "charset": "[A-ZÉËÊÈÎÏÇÀ]",
+    "keyboard": [
+      "___É Ë Ê È Î Ï Ç À___",
+      "_A Z E R T Y U I O P_",
+      "_Q S D F G H J K L M_",
+      "__< W X C V B N [=]__"
+    ],
+    "default_nb_letters": 5,
+    "default_nb_attempts": 6,
+    "default_difficulty": 5,
+    "messages": {
+      "difficulty": "Difficulté: ",
+      "poswords": " mots possibles!",
+      "howquit": "(2 fois ESC pour quitter)",
+      "guess": "Entrer essai : ",
+      "won": "Gagné !",
+      "lost": "Perdu ! Le mot était :",
+      "again": "Réessayer [O/N]? ",
+      "yes": "O",
+      "bye": "Au revoir..."
+    },
+    "frequency_list": {
+      "src": "https://fr.wiktionary.org/wiki/Utilisateur:Darkdadaah/Listes/Mots_dump/frwiki/2016-02-03",
+      "attribution": [
+        "Cette liste est basée sur la liste de fréquence lexicale",
+        "Darkdadaah/Listes/Mots dump/frwiki/2016-02-03 compilée par",
+        "l'utilisateur Wiktionnaire Darkdadaah. Recherche basée sur le",
+        "dump de Wikipédia frwiki-20160203-pages-articles.xml.bz2 avec",
+        "le script get_words_from_dump.pl d'Anagrimes."
+      ],
+      "normalize": lambda lst, cs:
+        [w for w in [re.sub('^.*title=".+">(.+)</a>.*$', "\\1", w).upper() \
+        for w in lst \
+        if re.match('^<td><a href=".+" title=".+">.+</a></td>$', w)] \
+        if re.match("^{}+$".format(cs), w)]
+    },
+    "extra_words_list": {
+      "src": "file:///usr/share/dict/french",
+      "attribution": [
+        "Cette liste de mots supplémentaires est basée sur le paquet Debian",
+        "wfrench compilé de sources variées."
+      ],
+      "normalize": lambda lst, cs:
+         [w.upper() for w in lst \
+         if re.match("^{}+$".format(cs), w.upper()) and w[0] == w[0].lower()]
+    }
+  },
 }
 
 

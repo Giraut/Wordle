@@ -14,18 +14,20 @@ rm -rf ${PKGBUILD}
 cp -a ${PKGSRC} ${PKGBUILD}
 
 # Create empty directory structure
-mkdir -p ${PKGBUILD}/usr/local/bin
-mkdir -p ${PKGBUILD}//usr/local/games/wordle
+mkdir -p ${PKGBUILD}/usr/bin
+mkdir -p ${PKGBUILD}/usr/share/games/wordle
 
 # Populate the package build directory with the source files
 install -m 644 ${SRC}/README ${PKGBUILD}/usr/share/doc/wordle
 install -m 644 ${SRC}/LICENSE ${PKGBUILD}/usr/share/doc/wordle
 
-install -m 755 ${SRC}/wordle.py ${PKGBUILD}/usr/local/bin/wordle
-(cd ${PKGBUILD}/usr/local/bin && ln -s wordle sanuli)
+install -m 755 ${SRC}/wordle.py ${PKGBUILD}/usr/bin/wordle
+(cd ${PKGBUILD}/usr/bin && ln -s wordle sanuli)
+(cd ${PKGBUILD}/usr/bin && ln -s wordle lemot)
 
-install -m 644 ${SRC}/en_GB.langpack ${PKGBUILD}/usr/local/games/wordle
-install -m 644 ${SRC}/fi_FI.langpack ${PKGBUILD}/usr/local/games/wordle
+install -m 644 ${SRC}/en_GB.langpack ${PKGBUILD}/usr/share/games/wordle
+install -m 644 ${SRC}/fi_FI.langpack ${PKGBUILD}/usr/share/games/wordle
+install -m 644 ${SRC}/fr_FR.langpack ${PKGBUILD}/usr/share/games/wordle
 
 # Set the version in the control file
 sed -i "s/^Version:.*\$/Version: ${VERSION}/" ${PKGBUILD}/DEBIAN/control

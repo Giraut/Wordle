@@ -15,8 +15,10 @@ wordle - Wordle game for the Unix console
 %doc /usr/share/doc/wordle/README
 %doc /usr/share/doc/wordle/LICENSE
 
-/usr/local/bin/wordle
-/usr/local/bin/sanuli
+/usr/bin/wordle
+/usr/bin/sanuli
+/usr/bin/lemot
 
-/usr/local/games/wordle/en_GB.langpack
-/usr/local/games/wordle/fi_FI.langpack
+/usr/share/games/wordle/en_GB.langpack
+/usr/share/games/wordle/fi_FI.langpack
+/usr/share/games/wordle/fr_FR.langpack
