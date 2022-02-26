@@ -232,8 +232,8 @@ def game(letters, attempt, difficulty):
         break
 
       # Ask the user their next guess. Only stop the user input when the user
-      # hits ESC or enters a guessword that is in the frequency list or in the
-      # extra words list
+      # hits ESC twice or enters a guessword that is in the possible user
+      # entries list
       guess = ""
       escapes = 0
 
