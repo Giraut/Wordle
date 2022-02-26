@@ -51,7 +51,7 @@ x_lines_up = "\033[{}A"
 bg_color_black = 40
 bg_color_green = 42
 bg_color_yellow = 43
-bg_color_lightgrey =47
+bg_color_lightgrey = 47
 bg_color_grey = 100
 bg_color_white = 107
 
