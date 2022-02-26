@@ -1,4 +1,4 @@
-# wordle v1.4.2
+# wordle v1.4.3
 ## Wordle game for the Unix console
 
 This is a clone of the popular Wordle game playable on a regular Unix terminal

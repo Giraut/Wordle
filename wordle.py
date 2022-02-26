@@ -176,6 +176,10 @@ def game(letters, attempt, difficulty):
   pws = [w for w in lp.frequency_list if len(w) == letters]
   pws = pws[:max(1, int(len(pws) /5 * difficulty))]
 
+  # Create the list of possible user entries from the frequency list and the
+  # extra words list
+  ues = pws + [w for w in lp.extra_words_list if len(w) == letters]
+
   # Display the difficulty level and size of the list of words to choose from
   print("\n{}{}/5".format(lp.difficulty, difficulty))
   print("{}{}\n".format(len(pws), lp.poswords))
@@ -247,9 +251,9 @@ def game(letters, attempt, difficulty):
             guess = guess[:-1]
             print("\b_", end = "\b")
 
-        # Validate the guess if it's in the frequency list or extra words list
+        # Validate the guessword if it's in the possible user entries list
         elif c == RETURN:
-          if guess in lp.frequency_list or guess in lp.extra_words_list:
+          if guess in ues:
             break
 
         # Add a letter to the guessword if there's still room
