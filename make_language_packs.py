@@ -125,9 +125,9 @@ languages = {
     "description": [
       "Paquet linguistique pour Wordle"
     ],
-    "charset": "[A-ZÉËÊÈÎÏÇÀ]",
+    "charset": "[A-ZÉËÊÈÎÏÇÀÔÙ]",
     "keyboard": [
-      "___É Ë Ê È Î Ï Ç À___",
+      "_É Ë Ê È Î Ï Ç À_Ô_Ù_",
       "_A Z E R T Y U I O P_",
       "_Q S D F G H J K L M_",
       "__< W X C V B N [=]__"
