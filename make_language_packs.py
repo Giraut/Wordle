@@ -54,7 +54,8 @@ languages = {
       "normalize": lambda lst, cs:
          [w.upper() for w in [e.split()[2] for e in lst \
          if re.match("^[0-9]+ +[0-9\.]+ +[^ ]+$", e)] \
-         if re.match("^{}+$".format(cs), w.upper()) and w[0] == w[0].lower()]
+         if re.match("^{}+$".format(cs), w.upper()) and \
+         w[0] == w[0].lower() and not re.match("^[^AEIOUY]+$", w.upper())]
     },
     "extra_words_list": {
       "src": "file:///usr/share/dict/british-english",
@@ -66,7 +67,8 @@ languages = {
       ],
       "normalize": lambda lst, cs:
          [w.upper() for w in lst \
-         if re.match("^{}+$".format(cs), w.upper()) and w[0] == w[0].lower()]
+         if re.match("^{}+$".format(cs), w.upper()) and \
+         w[0] == w[0].lower() and not re.match("^[^AEIOUY]+$", w.upper())]
     }
   },
 
@@ -105,7 +107,8 @@ languages = {
         [e[3].upper() for e in [e.split() for e in lst \
         if re.match("^ +[0-9]+ +[0-9]+ [0-9,]+ +[^ ]+ +\(.+\)$", e)] \
         if re.match("^{}+$".format(cs), e[3].upper()) and \
-	"erisnimi" not in e[4]]
+	"erisnimi" not in e[4] and \
+        not re.match("^[^AEIOUYÄÅÖ]+$", e[3].upper())]
     },
     "extra_words_list": {
       "src": "https://raw.githubusercontent.com/hugovk/everyfinnishword/master/kaikkisanat.txt",
@@ -117,7 +120,8 @@ languages = {
         "luettavissa osoitteessa http://www.gnu.org/licenses/lgpl.html"
       ],
       "normalize": lambda lst, cs:
-         [w.upper() for w in lst if re.match("^{}+$".format(cs), w.upper())]
+        [w.upper() for w in lst if re.match("^{}+$".format(cs), w.upper()) and \
+        not re.match("^[^AEIOUYÄÅÖ]+$", w.upper())]
     }
   },
 
@@ -159,7 +163,8 @@ languages = {
         [w for w in [re.sub('^.*title=".+">(.+)</a>.*$', "\\1", w).upper() \
         for w in lst \
         if re.match('^<td><a href=".+" title=".+">.+</a></td>$', w)] \
-        if re.match("^{}+$".format(cs), w)]
+        if re.match("^{}+$".format(cs), w) and \
+        not re.match("^[^AEIOUYÉËÊÈÎÏÀÂÔÜ]+$", w)]
     },
     "extra_words_list": {
       "src": "file:///usr/share/dict/french",
@@ -168,8 +173,10 @@ languages = {
         "wfrench compilé de sources variées."
       ],
       "normalize": lambda lst, cs:
-         [w.upper() for w in lst \
-         if re.match("^{}+$".format(cs), w.upper()) and w[0] == w[0].lower()]
+        [w.upper() for w in lst \
+        if re.match("^{}+$".format(cs), w.upper()) and \
+        w[0] == w[0].lower() and \
+        not re.match("^[^AEIOUYÉËÊÈÎÏÀÂÔÜ]+$", w.upper())]
     }
   },
 }
