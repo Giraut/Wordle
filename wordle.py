@@ -10,6 +10,7 @@ import re
 import os
 import sys
 import tty
+import time
 import random
 import termios
 import argparse
@@ -209,9 +210,13 @@ def game(letters, attempt, difficulty):
 
     for t in range(attempts + 1):
 
-      # Print the stack of guesswords
+      # Print the stack of guesswords, with animation if the user guessed right
       for g in guesses:
-        print(" " * -sp + colored_guess(word, g, spent_letters))
+        if guess == word:
+          print(" " * -sp + colored_guess(word, "_" * letters, ()), end = "")
+          sys.stdout.flush()
+          time.sleep(.05)
+        print("\r" + " " * -sp + colored_guess(word, g, spent_letters))
 
       print()
 
