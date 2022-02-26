@@ -125,12 +125,12 @@ languages = {
     "description": [
       "Paquet linguistique pour Wordle"
     ],
-    "charset": "[A-ZÉËÊÈÎÏÇÀÔÙ]",
+    "charset": "[A-ZÉËÊÈÎÏÇÀÂÔÙÜ]",
     "keyboard": [
-      "_É Ë Ê È Î Ï Ç À_Ô_Ù_",
-      "_A Z E R T Y U I O P_",
-      "_Q S D F G H J K L M_",
-      "__< W X C V B N [=]__"
+      "_É Ë Ê È Î Ï Ç À Â Ô Ü_",
+      "__A Z E R T Y U I O P__",
+      "_Q S D F G H J K L M Ù_",
+      "__<  W X C V B N  [=]__"
     ],
     "default_nb_letters": 5,
     "default_nb_attempts": 6,
