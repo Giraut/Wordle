@@ -38,14 +38,24 @@ alternative_program_name_language_packs = {
 
 
 ### Defines:
+# Special characters
+BS = "\b"
+CR = "\r"
+LF = "\n"
+ESC = "\x1b"
+DEL = "\x7f"
+
 # ANSI standard color selection sequence
-set_colors = "\033[{};{}m"
+set_colors = ESC + "[{};{}m"
 
 # ANSI attributes reset
-attribute_reset = "\033[0m"
+attribute_reset = ESC + "[0m"
 
 # ANSI x lines up
-x_lines_up = "\033[{}A"
+x_lines_up = ESC + "[{}A"
+
+# Regex matching any of the ANSI sequences above
+any_ansi_seq = re.compile(ESC + "\[.+?[mA]")
 
 # Standard ANSI 4-bit colors
 bg_color_black = 40
@@ -65,11 +75,6 @@ color_letter_spent = set_colors.format(bg_color_grey, fg_color_white)
 color_letter_unused = set_colors.format(bg_color_lightgrey, fg_color_black)
 color_letter_empty = set_colors.format(bg_color_white, fg_color_white)
 color_letter_normal = attribute_reset
-
-# Special keys
-RETURN = "\r"
-ESCAPE = "\x1b"
-BACKSPACE = "\x7f"
 
 
 
@@ -145,6 +150,14 @@ def colored_kbdline(word, kbdline, spent_letters, found_letters):
 
 
 
+def cprint(cols, s, end = None, flush = None):
+  """Center-print a string
+  """
+  print(" " * int((cols - len(any_ansi_seq.sub("", s))) / 2) + s,
+	end = end, flush = flush)
+
+
+
 def readchar():
   """Read one character raw
   """
@@ -163,33 +176,35 @@ def game(letters, attempt, difficulty):
   """Wordle game proper
   """
 
-  # Calculate the spacing to center the guesswords and the keyboard
-  sp =  int((letters * 3 - len(lp.keyboard[0])) / 2)
-
-  # Calculate the maximum line length
-  max_ll = max(letters * 3 + max(0, -sp),
-		len(lp.keyboard[0]) + max(0, sp),
-		len(lp.guess) + letters, len(lp.won), len(lp.lost),
-		len(lp.again))
-
   # Isolate the list of words to choose from from the frequency list
   # and reduce it according to the difficulty level
   pws = [w for w in lp.frequency_list if len(w) == letters]
   pws = pws[:max(1, int(len(pws) /5 * difficulty))]
 
+  # Messages for the difficulty and size of the list of words to choose from
+  mdiff = "{}{}/5".format(lp.difficulty, difficulty)
+  mlsize = "{}{}".format(len(pws), lp.poswords)
+
+  # Calculate the maximum line length
+  maxll = 2 + max(len(mdiff), len(mlsize), len(lp.howquit), letters * 3,
+		len(lp.keyboard[0]), len(lp.guess) + letters, len(lp.won),
+		len(lp.lost), len(lp.again) + 1, len(lp.bye))
+
   # Create the list of possible user entries from the frequency list and the
   # extra words list
   ues = pws + [w for w in lp.extra_words_list if len(w) == letters]
 
+  print()
+
   # Display the difficulty level and size of the list of words to choose from
-  print("\n{}{}/5".format(lp.difficulty, difficulty))
-  print("{}{}\n".format(len(pws), lp.poswords))
+  cprint(maxll, mdiff)
+  cprint(maxll, mlsize, end = CR + LF * 2)
 
   # The list of words to choose from should have at least one entry
   if len(pws) < 1:
     return -1
 
-  print(lp.howquit + "\n")
+  cprint(maxll, lp.howquit, end = CR + LF * 2)
 
   # Run the game continuously
   while True:
@@ -205,30 +220,31 @@ def game(letters, attempt, difficulty):
     guess = ""
 
     # Wipe the game area clean and move the cursor back to the top left
-    print((" " * max_ll + "\n") * (attempts + len(lp.keyboard) + 8), end = "")
-    print(x_lines_up.format(attempts + len(lp.keyboard) + 8), end = "\r")
+    print((" " * maxll + CR + LF) * (attempts + len(lp.keyboard) + 8), end = "")
+    print(x_lines_up.format(attempts + len(lp.keyboard) + 8), end = "")
 
     for t in range(attempts + 1):
 
       # Print the stack of guesswords, with animation if the user guessed right
       for g in guesses:
         if guess == word:
-          print(" " * -sp + colored_guess(word, "_" * letters, ()), end = "")
-          sys.stdout.flush()
+          cprint(maxll, colored_guess(word, "_" * letters, ()), end = "",
+			flush = True)
           time.sleep(.05)
-        print("\r" + " " * -sp + colored_guess(word, g, spent_letters))
+          print(CR, end = "")
+        cprint(maxll, colored_guess(word, g, spent_letters))
 
       print()
 
       # Print the keyboard
       for l in lp.keyboard:
-        print(" " * sp + colored_kbdline(word, l, spent_letters, found_letters))
+        cprint(maxll, colored_kbdline(word, l, spent_letters, found_letters))
 
       print()
 
       # If the user has run out of attempts or has guessed right, stop trying
       if t == attempts or guess == word:
-        print("\n")
+        print(CR + LF)
         break
 
       # Ask the user their next guess. Only stop the user input when the user
@@ -237,27 +253,24 @@ def game(letters, attempt, difficulty):
       guess = ""
       escapes = 0
 
-      print(lp.guess + "_" * letters + "\b" * letters, end = "")
+      cprint(maxll, lp.guess + "_" * letters, end = BS * letters, flush = True)
 
       while True:
-
-        # Make sure the display is up to date
-        sys.stdout.flush()
 
         # Read a single character
         c = readchar().upper()
 
         # Count successive ESC characters
-        escapes = escapes + 1 if c == ESCAPE else 0
+        escapes = escapes + 1 if c == ESC else 0
 
         # Erase a character from the guessword
-        if c == BACKSPACE:
+        if c == DEL:
           if guess:
             guess = guess[:-1]
-            print("\b_", end = "\b")
+            print(BS + "_", end = BS, flush = True)
 
         # Validate the guessword if it's in the possible user entries list
-        elif c == RETURN:
+        elif c == CR:
           if guess in ues:
             break
 
@@ -265,11 +278,12 @@ def game(letters, attempt, difficulty):
         elif re.match("^{}$".format(lp.charset), c):
           if len(guess) < letters:
             guess += c
-            print(c, end = "")
+            print(c, end = "", flush = True)
 
         # Quit if ESC twice
         elif escapes == 2:
-          print("\n\n" + lp.bye + "\n")
+          print(CR + LF)
+          cprint(maxll, lp.bye, end = CR + LF * 2)
           return 0
 
       # Add the new guessword to the list of guesswords
@@ -285,22 +299,27 @@ def game(letters, attempt, difficulty):
           found_letters += c
 
       # Move the cursor back to the top left
-      print(x_lines_up.format(attempts + len(lp.keyboard) + 2), end = "\r")
+      print(x_lines_up.format(attempts + len(lp.keyboard) + 2), end = CR)
 
     # Display whether the user won or lost, and what the word was if they lost
-    print((lp.won + "\n") if guess == word else lp.lost + "\n" + \
-		colored_guess(word, word, "") + attribute_reset, end = "\n\n")
+    if guess == word:
+      cprint(maxll, lp.won, end = CR + LF * 3)
+    else:
+      cprint(maxll, lp.lost)
+      cprint(maxll, colored_guess(word, word, ""),
+			end = attribute_reset + CR + LF * 2)
 
     # Ask the user if they would like to play again
-    print(lp.again)
+    cprint(maxll, lp.again + "_", end = BS, flush = True)
     c = readchar()
 
-    if c.upper() != lp.yes and c != RETURN:
-      print("\n" + lp.bye + "\n")
+    if c.upper() != lp.yes and c != CR:
+      print(CR + LF)
+      cprint(maxll, lp.bye, end = CR + LF * 2)
       break
 
     # Move the cursor back to the top left
-    print(x_lines_up.format(attempts + len(lp.keyboard) + 8), end = "\r")
+    print(x_lines_up.format(attempts + len(lp.keyboard) + 7), end = CR)
 
   return 0
 
