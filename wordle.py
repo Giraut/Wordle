@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Wordle game for the Unix console
 
@@ -55,7 +55,7 @@ attribute_reset = ESC + "[0m"
 x_lines_up = ESC + "[{}A"
 
 # Regex matching any of the ANSI sequences above
-any_ansi_seq = re.compile(ESC + "\[.+?[mA]")
+any_ansi_seq = re.compile(ESC + r"\[.+?[mA]")
 
 # Standard ANSI 4-bit colors
 bg_color_black = 40
@@ -332,7 +332,7 @@ if __name__ == "__main__":
   lps = {f.split(".")[0]: os.path.join(p, f) for p in language_packs_path \
 	if os.path.exists(p) for f in os.listdir(p) \
 	if os.path.isfile(os.path.join(p, f)) and \
-	re.match("^[a-zA-Z_-]+\.langpack$", f)}
+	re.match(r"^[a-zA-Z_-]+\.langpack$", f)}
 
   # Remove languages for which we don't have a language pack
   languages = {l: languages[l] for l in languages if languages[l] in lps}
